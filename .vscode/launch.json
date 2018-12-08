@@ -1,0 +1,40 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Test all files",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "--no-timeouts",
+        "--colors",
+        "--require",
+        "ts-node/register",
+        "--watch-extensions",
+        "ts,tsx",
+        "${workspaceRoot}/test/**/*.{ts,tsx}"
+      ],
+      "cwd": "${workspaceRoot}",
+      "outputCapture": "std",
+      "protocol": "inspector",
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "name": "Run application",
+      "type": "node",
+      "request": "launch",
+      "args": [
+        "src/index.ts"
+      ],
+      "runtimeArgs": [
+        "--require",
+        "ts-node/register"
+      ],
+      "cwd": "${workspaceRoot}",
+      "outputCapture": "std",
+      "protocol": "inspector",
+      "internalConsoleOptions": "openOnSessionStart"
+    }
+  ]
+}
