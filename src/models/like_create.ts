@@ -1,4 +1,4 @@
-import { JsonProperty, MinLength, Required } from "@tsed/common";
+import { JsonProperty, Required } from "@tsed/common";
 
 export class LikeCreateParams {
 

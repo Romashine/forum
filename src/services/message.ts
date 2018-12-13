@@ -16,7 +16,7 @@ export class MessageService {
   }
 
   /**
-   * Создает сщщбщение в теме форума
+   * Создает сообщение в теме форума
    * @param userId ID of user
    * @param themeId ID of theme
    * @param text Text of message
@@ -54,7 +54,7 @@ export class MessageService {
     if (!text) {
       throw new Error("Empty text");
     }
-    await this.checkRulse(userId, id);
+    await this.checkRules(userId, id);
     await this.messageTable.updateOne({ _id: id }, { text });
     return;
   }
@@ -64,7 +64,7 @@ export class MessageService {
    * @param id ID of message
    */
   public async delete(userId: string, id: string) {
-    await this.checkRulse(userId, id);
+    await this.checkRules(userId, id);
     await this.likesTable.deleteAllFromMessage(id);
     await this.messageTable.deleteOne({ _id: id });
     return;
@@ -96,7 +96,7 @@ export class MessageService {
    * @param userId userId пользователя
    * @param id ID of message
    */
-  private async checkRulse(userId: string, id: string) {
+  private async checkRules(userId: string, id: string) {
     const theme = await this.getById(id);
     if (userId !== theme.userId) {
       throw new UnauthorizedError("You have not rules");

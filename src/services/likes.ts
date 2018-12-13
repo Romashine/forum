@@ -1,7 +1,7 @@
 import { Inject, Service } from "@tsed/common";
 import { MongooseModel } from "@tsed/mongoose";
 import { LikesModel } from "../db/likes";
-import { NotFoundError, UnauthorizedError } from "../lib/errors";
+import { AccessDeniedError, NotFoundError, UnauthorizedError } from "../lib/errors";
 import { LikeCreateParams } from "../models/like_create";
 
 @Service()
@@ -21,7 +21,7 @@ export class LikesService {
   public async create(userId: string, messageId: string) {
     const user = await this.likesTable.findOne({ userId });
     if (user) {
-      throw new Error("You can not give second like");
+      throw new AccessDeniedError("You can not give second like");
     }
     const params: LikeCreateParams = {
       messageId,
@@ -49,7 +49,7 @@ export class LikesService {
    * @param id ID of message
    */
   public async delete(userId: string, id: string) {
-    await this.checkRulse(userId, id);
+    await this.checkRules(userId, id);
     await this.likesTable.deleteOne({ _id: id });
     return;
   }
@@ -80,7 +80,7 @@ export class LikesService {
    * @param userId userId пользователя
    * @param id ID of message
    */
-  private async checkRulse(userId: string, id: string) {
+  private async checkRules(userId: string, id: string) {
     const theme = await this.getById(id);
     if (userId !== theme.userId) {
       throw new UnauthorizedError("You have not rules");

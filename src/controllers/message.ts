@@ -1,6 +1,6 @@
 import { BodyParams, Controller, Delete, Get, Post, QueryParams, Required, Status, UseBefore } from "@tsed/common";
 import { Request, Response } from "@tsed/common";
-import { Description, Returns, Summary } from "@tsed/swagger";
+import { Description, Summary } from "@tsed/swagger";
 import { Request as ExpressRequest, Response as ExpressResponse } from "express";
 import { UsersModel } from "../db/users";
 import { CheckAuthMiddleware } from "../middlewares/check_auth";
@@ -21,7 +21,6 @@ export class MessageController {
   @UseBefore(CheckAuthMiddleware)
   public async create(
     @Request() req: ExpressRequest,
-    @Response() res: ExpressResponse,
     @Required()
     @Description("Text of message")
     @BodyParams("text") text: string,
@@ -47,7 +46,7 @@ export class MessageController {
     @Description("New text")
     @BodyParams("text") text: string,
   ) {
-    const result = await this.message.update(req.user.id, id, text);
+    await this.message.update(req.user.id, id, text);
     res.json({ message: "Text successfully changed" });
   }
 
@@ -55,8 +54,6 @@ export class MessageController {
   @Summary("Получение списка сообщений")
   @Description("Возвращает список сообщений из темы")
   public async getList(
-    @Response() res: ExpressResponse,
-    @Request() req: ExpressRequest,
     @Description("Page")
     @QueryParams("page") page: number,
     @Description("amount")
@@ -82,7 +79,7 @@ export class MessageController {
     res.json({ message: "Successfully deleted" });
   }
 
-  @Post("/create_like")
+  @Post("/like")
   @Summary("Create like in message")
   @Description("Create like in message")
   @UseBefore(CheckAuthMiddleware)
@@ -93,16 +90,14 @@ export class MessageController {
     @Description("ID of message")
     @BodyParams("messageId") id: string,
   ) {
-    const result = await this.likes.create(req.user.id, id);
+    await this.likes.create(req.user.id, id);
     res.json({ message: "Like successfully added" });
   }
 
-  @Get("/list_likes")
+  @Get("/like")
   @Summary("Получение списка лайков")
   @Description("Возвращает список лайков для сообщения")
   public async getListLikes(
-    @Response() res: ExpressResponse,
-    @Request() req: ExpressRequest,
     @Description("Page")
     @QueryParams("page") page: number,
     @Description("amount")
@@ -114,7 +109,7 @@ export class MessageController {
     return list;
   }
 
-  @Delete("/delete_like")
+  @Delete("/like")
   @Summary("Удаление лайка")
   @Description("Удаляет like")
   @UseBefore(CheckAuthMiddleware)

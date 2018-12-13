@@ -32,10 +32,7 @@ export class CheckAuthMiddleware implements IMiddleware {
 
     // Логинация
     const user = await this.users.getByEmail(login);
-    if (!user) {
-      throw new NotFoundError("Not found user");
-    }
-    if (user.password !== password) {
+    if (!user || user.password !== password) {
       throw new UnauthorizedError("Invalid password");
     }
 

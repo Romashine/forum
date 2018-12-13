@@ -1,11 +1,9 @@
 import { BodyParams, Controller, Delete, Get, Post, QueryParams, Required, Status, UseBefore } from "@tsed/common";
 import { Request, Response } from "@tsed/common";
-import { Description, Returns, Summary } from "@tsed/swagger";
+import { Description, Summary } from "@tsed/swagger";
 import { Request as ExpressRequest, Response as ExpressResponse } from "express";
 import { UsersModel } from "../db/users";
-import { HttpError } from "../lib/errors";
 import { CheckAuthMiddleware } from "../middlewares/check_auth";
-import { UserCreateParams } from "../models/user_create";
 import { ThemeService } from "../services/theme";
 
 @Controller("/theme")
@@ -21,7 +19,6 @@ export class ThemeController {
   @UseBefore(CheckAuthMiddleware)
   public async create(
     @Request() req: ExpressRequest,
-    @Response() res: ExpressResponse,
     @Required()
     @Description("Заголовок темы")
     @BodyParams("title") title: string,
@@ -42,7 +39,7 @@ export class ThemeController {
     @Description("New title")
     @BodyParams("title") title: string,
   ) {
-    const result = await this.theme.update(req.user.id, id, title);
+    await this.theme.update(req.user.id, id, title);
     res.json({ message: "Title successfully changed" });
   }
 
@@ -50,8 +47,6 @@ export class ThemeController {
   @Summary("Получение списка тем")
   @Description("Возвращает список тем")
   public async getList(
-    @Response() res: ExpressResponse,
-    @Request() req: ExpressRequest,
     @Description("Page")
     @QueryParams("page") page: number,
     @Description("amount")

@@ -1,7 +1,7 @@
 import { MongooseModel } from "@tsed/mongoose";
 import assert from "assert";
-import { UsersModel } from "../../db/users";
-import { UsersService } from "../../services/users";
+// import { UsersModel } from "../../db/users";
+// import { UsersService } from "../../services/users";
 
 // context("UsersService", () => {
 

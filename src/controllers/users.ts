@@ -3,7 +3,7 @@ import { Request, Response } from "@tsed/common";
 import { Description, Returns, Summary } from "@tsed/swagger";
 import { Request as ExpressRequest, Response as ExpressResponse } from "express";
 import { UsersModel } from "../db/users";
-import { HttpError, NotFoundError } from "../lib/errors";
+import { HttpError } from "../lib/errors";
 import { CheckAuthMiddleware } from "../middlewares/check_auth";
 import { UserCreateParams } from "../models/user_create";
 import { UsersService } from "../services/users";
@@ -19,8 +19,6 @@ export class UsersController {
   @Description("Создает пользователя по параметрам")
   @Status(201, { description: "Data of user", type: UsersModel })
   public async create(
-    @Request() req: ExpressRequest,
-    @Response() res: ExpressResponse,
     @Description("Параметры пользователя")
     @BodyParams() body: UserCreateParams,
   ) {
@@ -36,7 +34,6 @@ export class UsersController {
   @UseBefore(CheckAuthMiddleware)
   public async getByEmail(
     @Request() req: ExpressRequest,
-    @Response() res: ExpressResponse,
   ) {
     const result = await this.users.getByEmail(req.user.email);
     return result;
