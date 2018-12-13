@@ -57,7 +57,16 @@ export class UsersService {
     if (!username) {
       throw new Error("Empty username");
     }
-    await this.usersTable.updateOne({email}, {username});
+    await this.usersTable.updateOne({ email }, { username });
+    return;
+  }
+
+  /**
+   * Удаляет пользователя
+   * @param email Почта пользователя
+   */
+  public async delete(email: string) {
+    await this.usersTable.deleteOne({email});
     return;
   }
 

@@ -1,4 +1,4 @@
-import { BodyParams, Controller, Get, Post, Required, Status, UseBefore } from "@tsed/common";
+import { BodyParams, Controller, Delete, Get, Post, Required, Status, UseBefore } from "@tsed/common";
 import { Request, Response } from "@tsed/common";
 import { Description, Returns, Summary } from "@tsed/swagger";
 import { Request as ExpressRequest, Response as ExpressResponse } from "express";
@@ -70,4 +70,17 @@ export class UsersController {
     await this.users.changeUsername(req.user.email, newUsername);
     res.json({ message: "Username successfully changed" });
   }
+
+  @Delete("/delete")
+  @Summary("Удаление пользователя")
+  @Description("Удаляет пользователя")
+  @UseBefore(CheckAuthMiddleware)
+  public async delete(
+    @Response() res: ExpressResponse,
+    @Request() req: ExpressRequest,
+  ) {
+    await this.users.delete(req.user.email);
+    res.json({ message: "Successfully deleted" });
+  }
+
 }
