@@ -49,6 +49,7 @@ export class UsersController {
   public async reset(
     @Response() res: ExpressResponse,
     @Request() req: ExpressRequest,
+    @Required()
     @BodyParams("newPassword") newPassword: string,
     @Required()
     @BodyParams("confirmNewPassword") confirmNewPassword: string,
@@ -64,6 +65,7 @@ export class UsersController {
   public async changeUsername(
     @Response() res: ExpressResponse,
     @Request() req: ExpressRequest,
+    @Required()
     @Description("New username")
     @BodyParams("newUsername") newUsername: string,
   ) {

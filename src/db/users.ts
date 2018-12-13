@@ -5,7 +5,7 @@ import { Model, Unique } from "@tsed/mongoose";
 export class UsersModel {
 
   @Unique()
-  public _id!: string;
+  public id!: string;
 
   @JsonProperty()
   @Unique()
