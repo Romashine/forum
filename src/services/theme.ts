@@ -3,15 +3,15 @@ import { MongooseModel } from "@tsed/mongoose";
 import { ThemeModel } from "../db/theme";
 import { NotFoundError, UnauthorizedError } from "../lib/errors";
 import { ThemeCreateParams } from "../models/theme_create";
-import { UsersService } from "./users";
+import { MessageService } from "./message";
 
 @Service()
 export class ThemeService {
 
   constructor(
-    private usersTable: UsersService,
     @Inject(ThemeModel)
     private themeTable: MongooseModel<ThemeModel>,
+    private messageTable: MessageService,
   ) {
   }
 
@@ -63,6 +63,7 @@ export class ThemeService {
    */
   public async delete(userId: string, id: string) {
     await this.checkRulse(userId, id);
+    await this.messageTable.deleteTheme(id);
     await this.themeTable.deleteOne({ _id: id });
     return;
   }
