@@ -3,15 +3,15 @@ import { Request, Response } from "@tsed/common";
 import { Description, Returns, Summary } from "@tsed/swagger";
 import { Request as ExpressRequest, Response as ExpressResponse } from "express";
 import { UsersModel } from "../db/users";
-import { HttpError } from "../lib/errors";
 import { CheckAuthMiddleware } from "../middlewares/check_auth";
-import { UserCreateParams } from "../models/user_create";
+import { LikesService } from "../services/likes";
 import { MessageService } from "../services/message";
 
 @Controller("/messages")
 export class MessageController {
   constructor(
-    private messages: MessageService,
+    private message: MessageService,
+    private likes: LikesService,
   ) { }
 
   @Post("/")
@@ -29,7 +29,7 @@ export class MessageController {
     @Description("ID of theme")
     @BodyParams("themeId") themeId: string,
   ) {
-    const result = await this.messages.create(req.user.id, themeId, text);
+    const result = await this.message.create(req.user.id, themeId, text);
     return result;
   }
 
@@ -47,7 +47,7 @@ export class MessageController {
     @Description("New text")
     @BodyParams("text") text: string,
   ) {
-    const result = await this.messages.update(req.user.id, id, text);
+    const result = await this.message.update(req.user.id, id, text);
     res.json({ message: "Text successfully changed" });
   }
 
@@ -64,7 +64,7 @@ export class MessageController {
     @Description("ID of theme")
     @QueryParams("themeId") themeId: string,
   ) {
-    const list = await this.messages.getList(page, amount, themeId);
+    const list = await this.message.getList(page, amount, themeId);
     return list;
   }
 
@@ -78,7 +78,53 @@ export class MessageController {
     @Description("ID of message")
     @BodyParams("messageId") id: string,
   ) {
-    await this.messages.delete(req.user.id, id);
+    await this.message.delete(req.user.id, id);
+    res.json({ message: "Successfully deleted" });
+  }
+
+  @Post("/create_like")
+  @Summary("Create like in message")
+  @Description("Create like in message")
+  @UseBefore(CheckAuthMiddleware)
+  public async createLike(
+    @Response() res: ExpressResponse,
+    @Request() req: ExpressRequest,
+    @Required()
+    @Description("ID of message")
+    @BodyParams("messageId") id: string,
+  ) {
+    const result = await this.likes.create(req.user.id, id);
+    res.json({ message: "Like successfully added" });
+  }
+
+  @Get("/list_likes")
+  @Summary("Получение списка лайков")
+  @Description("Возвращает список лайков для сообщения")
+  public async getListLikes(
+    @Response() res: ExpressResponse,
+    @Request() req: ExpressRequest,
+    @Description("Page")
+    @QueryParams("page") page: number,
+    @Description("amount")
+    @QueryParams("amount") amount: number,
+    @Description("ID of message")
+    @QueryParams("messageId") messageId: string,
+  ) {
+    const list = await this.likes.getList(page, amount, messageId);
+    return list;
+  }
+
+  @Delete("/delete_like")
+  @Summary("Удаление лайка")
+  @Description("Удаляет like")
+  @UseBefore(CheckAuthMiddleware)
+  public async deleteLike(
+    @Response() res: ExpressResponse,
+    @Request() req: ExpressRequest,
+    @Description("ID of message")
+    @BodyParams("messageId") id: string,
+  ) {
+    await this.likes.delete(req.user.id, id);
     res.json({ message: "Successfully deleted" });
   }
 

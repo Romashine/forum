@@ -63,7 +63,7 @@ export class ThemeService {
    */
   public async delete(userId: string, id: string) {
     await this.checkRulse(userId, id);
-    await this.messageTable.deleteTheme(id);
+    await this.messageTable.deleteAllFromTheme(id);
     await this.themeTable.deleteOne({ _id: id });
     return;
   }

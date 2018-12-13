@@ -3,6 +3,7 @@ import { MongooseModel } from "@tsed/mongoose";
 import { MessageModel } from "../db/message";
 import { NotFoundError, UnauthorizedError } from "../lib/errors";
 import { MessageCreateParams } from "../models/message_create";
+import { LikesService } from "./likes";
 
 @Service()
 export class MessageService {
@@ -10,6 +11,7 @@ export class MessageService {
   constructor(
     @Inject(MessageModel)
     private messageTable: MongooseModel<MessageModel>,
+    private likesTable: LikesService,
   ) {
   }
 
@@ -63,6 +65,7 @@ export class MessageService {
    */
   public async delete(userId: string, id: string) {
     await this.checkRulse(userId, id);
+    await this.likesTable.deleteAllFromMessage(id);
     await this.messageTable.deleteOne({ _id: id });
     return;
   }
@@ -70,7 +73,7 @@ export class MessageService {
    * Удаляет сообщения темы
    * @param id ID of theme
    */
-  public async deleteTheme(id: string) {
+  public async deleteAllFromTheme(id: string) {
     await this.messageTable.deleteMany({ themeId: id });
     return;
   }
