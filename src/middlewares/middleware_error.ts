@@ -19,6 +19,10 @@ export class GlobalErrorHandlerMiddleware implements IMiddlewareError {
       return response.status(404).json(new NotFoundError(error));
     }
 
+    if (error.status) {
+      return response.status(error.status).json(error);
+    }
+
     if (error instanceof HttpError) {
       return response.status(error.status).json(error);
     }

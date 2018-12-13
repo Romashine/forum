@@ -21,11 +21,14 @@
     "@tsed/ajv": "^4.32.2",
     "@tsed/common": "^4.32.2",
     "@tsed/core": "^4.32.2",
+    "@tsed/mongoose": "^4.32.2",
     "@tsed/swagger": "^4.32.2",
+    "@types/mongoose": "^5.3.4",
     "body-parser": "^1.18.3",
     "config": "^3.0.0",
     "express": "^4.16.4",
     "js-yaml": "^3.12.0",
+    "mongoose": "^5.3.15",
     "tslib": "^1.9.3"
   },
   "devDependencies": {

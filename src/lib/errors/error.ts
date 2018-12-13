@@ -1,8 +1,13 @@
-export class HttpError extends Error {
+import { JsonProperty } from "@tsed/common";
 
+export class HttpError extends Error {
+  @JsonProperty()
   public status: number;
+  @JsonProperty()
   public code: string;
+  @JsonProperty()
   public source: IErrorSource;
+  @JsonProperty()
   public meta?: object;
 
   /**

@@ -19,8 +19,21 @@ const rootDir = path.resolve(__dirname);
   swagger: [
     {
       path: "/api-docs",
+      spec: {
+        securityDefinitions: {
+          basicAuth: { type: "basic" },
+        },
+        security: [{ basicAuth: [] }],
+      },
     },
   ],
+
+  mongoose: {
+    url: `mongodb://${config.get("MONGO_URL")}/${config.get("MONGO_DB_NAME")}`,
+    connectionOptions: {
+
+    },
+  },
 
   ajv: {
     errorFormat: (error: any) => `At ${error.modelName}${error.dataPath}, value '${error.data}' ${error.message}`,

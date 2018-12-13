@@ -1,1 +1,6 @@
+# Server
 PORT: 5000
+
+# MongoDB
+MONGO_URL: 192.168.99.100:27017
+MONGO_DB_NAME: forum
